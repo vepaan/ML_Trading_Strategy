@@ -21,6 +21,9 @@ df = yf.download(tickers = symbols_list, start = start_date, end = end_date)
 df = df.stack()
 df.index.names = ['date', 'ticker']
 df.columns = df.columns.str.lower()
-print(df)
+
+#COMPUTING THE TECHNICAL INDICATORS
+df['garman_klass_vol'] = ((np.log(df['high']) - np.log(df['low'])) ** 2) / 2 - (2 * np.log(2) - 1) * ((np.log(df['adj close']) - np.log(df['open'])) ** 2)
+df['rsi'] = df.groupby(level = 1)['adj close'].transform(lambda x: pandas_ta.rsi(close = x, length = 20))
 
 
